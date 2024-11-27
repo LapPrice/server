@@ -1,6 +1,7 @@
 package com.lapprice.lapprice;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +21,10 @@ public class LapTopService {
 
 	public SelectOptionResponse getSelectOptionResponse() {
 		List<String> cpu = lapTopRepository.findDistinctCPUs();
-		List<Integer> ram = lapTopRepository.findDistinctRAMs();
-		List<Integer> ssd = lapTopRepository.findDistinctDisks();
+		List<Integer> ram = lapTopRepository.findDistinctRAMsSorted();
+		List<Integer> ssd = lapTopRepository.findDistinctDisksSorted();
 		List<String> brand = lapTopRepository.findDistinctBrands();
-		List<Integer> inch = lapTopRepository.findDistinctInches();
+		List<Integer> inch = lapTopRepository.findDistinctInchesSorted();
 		Map<String, List<String>> responseCpu = new HashMap<>();
 
 		List<String> intelCore = new ArrayList<>();
@@ -58,6 +59,11 @@ public class LapTopService {
 				etc.add(cpuName);
 			}
 		}
+
+		Collections.sort(intelCore);
+		Collections.sort(m1);
+		Collections.sort(m2);
+		Collections.sort(m3);
 
 		if (!intelCore.isEmpty()) responseCpu.put("Intel Core", intelCore);
 		if (!intelUltraCore.isEmpty()) responseCpu.put("Intel Ultra Core", intelUltraCore);
