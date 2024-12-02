@@ -11,16 +11,17 @@ public interface LapTopRepository extends JpaRepository<LapTop, Long> {
 	@Query("SELECT DISTINCT brand FROM LapTop")
 	List<String> findDistinctBrands();
 
-	@Query("SELECT DISTINCT cpuName FROM LapTop")
-	List<String> findDistinctCPUs();
+	@Query("SELECT DISTINCT cpu FROM LapTop")
+	List<String> findDistinctCpus();
 
 	@Query("SELECT DISTINCT ram FROM LapTop ORDER BY ram ASC")
 	List<Integer> findDistinctRAMsSorted();
 
-	@Query("SELECT DISTINCT disk FROM LapTop ORDER BY disk ASC")
-	List<Integer> findDistinctDisksSorted();
+	@Query("SELECT DISTINCT ssd FROM LapTop ORDER BY ssd ASC")
+	List<Integer> findDistinctSSdsSorted();
 
 	@Query("SELECT DISTINCT inch FROM LapTop ORDER BY inch ASC")
 	List<Integer> findDistinctInchesSorted();
 
+	List<LapTop> findAllByBrandAndCpuAndSsdAndRamAndInch(String brand,String cpu, Integer ssd, Integer ram, Integer inch);
 }

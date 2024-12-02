@@ -23,9 +23,9 @@ public class LapTop {
 	private String brand;
 	private String source;
 	private String lapTopName;
-	private String cpuName;
+	private String cpu;
 	private String sourceURL;
-	private Integer disk;
+	private Integer ssd;
 	private Integer ram;
 	private Integer price;
 	private Integer inch;

@@ -5,10 +5,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.lapprice.lapprice.dto.SelectOptionResponse;
+import com.lapprice.lapprice.dto.GetLaptopListExceptLaptopNameResponse;
+import com.lapprice.lapprice.dto.GetSelectOptionResponse;
+import com.lapprice.lapprice.dto.GetlaptopListExceptLaptopNameRequest;
+import com.lapprice.lapprice.dto.GetLaptopExceptLaptopNameResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,10 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 public class LapTopService {
 	private final LapTopRepository lapTopRepository;
 
-	public SelectOptionResponse getSelectOptionResponse() {
-		List<String> cpu = lapTopRepository.findDistinctCPUs();
+	public GetSelectOptionResponse getSelectOptionResponse() {
+		List<String> cpu = lapTopRepository.findDistinctCpus();
 		List<Integer> ram = lapTopRepository.findDistinctRAMsSorted();
-		List<Integer> ssd = lapTopRepository.findDistinctDisksSorted();
+		List<Integer> ssd = lapTopRepository.findDistinctSSdsSorted();
 		List<String> brand = lapTopRepository.findDistinctBrands();
 		List<Integer> inch = lapTopRepository.findDistinctInchesSorted();
 		Map<String, List<String>> responseCpu = new HashMap<>();
@@ -75,12 +80,44 @@ public class LapTopService {
 		if (!ryzen.isEmpty()) responseCpu.put("Ryzen", ryzen);
 		if (!etc.isEmpty()) responseCpu.put("ETC", etc);
 
-		return SelectOptionResponse.builder()
+		return GetSelectOptionResponse.builder()
 			.brand(brand)
 			.cpu(responseCpu)
 			.ram(ram)
 			.ssd(ssd)
 			.inch(inch)
 			.build();
+	}
+
+	public GetLaptopListExceptLaptopNameResponse getLaptopListExceptLaptopName(
+		GetlaptopListExceptLaptopNameRequest request) {
+		List<LapTop> allLaptopList = lapTopRepository.findAllByBrandAndCpuAndSsdAndRamAndInch(request.brand(),request.cpu(),request.ssd(),request.ram(),request.inch());
+
+		Map<String, List<LapTop>> groupedLaptops = allLaptopList.stream()
+			.collect(Collectors.groupingBy(LapTop::getLapTopName));
+
+		List <GetLaptopExceptLaptopNameResponse> lapTopList = new ArrayList<>();
+
+		for (Map.Entry<String, List<LapTop>> laptopList : groupedLaptops.entrySet()) {
+			String laptopName = laptopList.getKey();
+			List<LapTop> lapTops = laptopList.getValue();
+
+			List<Integer> prices = lapTops.stream()
+				.map(LapTop::getPrice)
+				.sorted()
+				.collect(Collectors.toList());
+
+			int representativePrice = calculateMedian(prices);
+
+			GetLaptopExceptLaptopNameResponse response = GetLaptopExceptLaptopNameResponse.toDTO(lapTops.get(0),representativePrice);
+			lapTopList.add(response);
+		}
+
+		return new GetLaptopListExceptLaptopNameResponse(lapTopList);
+	}
+
+	private int calculateMedian(List<Integer> prices) {
+		int size = prices.size();
+		return prices.get(size / 2);
 	}
 }

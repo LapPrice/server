@@ -1,0 +1,21 @@
+spring :
+  config:
+    import:
+      - "mysql.yml"
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${mysql_endpoint}/LapPrice
+    username: ${mysql_username}
+    password: ${mysql_password}
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
