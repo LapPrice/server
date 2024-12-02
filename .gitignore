@@ -37,6 +37,7 @@ out/
 .vscode/
 
 ###yml###
+src/main/resources/mysql.yml
 src/main/resources/application.yml
 #
 bfg-1.14.0.jar

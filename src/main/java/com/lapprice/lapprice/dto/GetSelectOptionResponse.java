@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SelectOptionResponse {
+public class GetSelectOptionResponse {
 	private List<String> brand;
 	private List<Integer> ssd;
 	private List<Integer> ram;
