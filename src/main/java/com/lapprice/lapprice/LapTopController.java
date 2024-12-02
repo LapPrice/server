@@ -1,8 +1,11 @@
 package com.lapprice.lapprice;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LapTopController {
 
 	private final LapTopService lapTopService;
+	private final LapTopRepository lapTopRepository;
 
 	@GetMapping(value = "/option")
 	public ResponseEntity<GetSelectOptionResponse> getSelectOption() {
@@ -36,7 +40,7 @@ public class LapTopController {
 		@RequestParam String cpu,
 		@RequestParam Integer ssd,
 		@RequestParam Integer ram,
-		@RequestParam Integer inch ) {
+		@RequestParam Integer inch) {
 		GetlaptopListExceptLaptopNameRequest request = GetlaptopListExceptLaptopNameRequest.builder()
 			.brand(brand)
 			.cpu(cpu)
@@ -48,5 +52,11 @@ public class LapTopController {
 		GetLaptopListExceptLaptopNameResponse response = lapTopService.getLaptopListExceptLaptopName(request);
 
 		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping(value = "/laptops")
+	public ResponseEntity<String> uploadLaptops(@RequestBody List<LapTop> laptops) {
+		lapTopRepository.saveAll(laptops);
+		return ResponseEntity.ok("Laptops data saved successfully!");
 	}
 }
