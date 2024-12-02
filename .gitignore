@@ -38,3 +38,9 @@ out/
 
 ###yml###
 src/main/resources/application.yml
+#
+bfg-1.14.0.jar
+
+
+###server.git###
+server.git/

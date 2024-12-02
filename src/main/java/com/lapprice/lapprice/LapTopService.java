@@ -1,5 +1,7 @@
 package com.lapprice.lapprice;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,7 +10,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lapprice.lapprice.dto.SelectOptionResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,15 +70,24 @@ public class LapTopService {
 		Collections.sort(m2);
 		Collections.sort(m3);
 
-		if (!intelCore.isEmpty()) responseCpu.put("Intel Core", intelCore);
-		if (!intelUltraCore.isEmpty()) responseCpu.put("Intel Ultra Core", intelUltraCore);
-		if (!intelPentium.isEmpty()) responseCpu.put("Intel Pentium", intelPentium);
-		if (!intelCeleron.isEmpty()) responseCpu.put("Intel Celeron", intelCeleron);
-		if (!m1.isEmpty()) responseCpu.put("Apple M1", m1);
-		if (!m2.isEmpty()) responseCpu.put("Apple M2", m2);
-		if (!m3.isEmpty()) responseCpu.put("Apple M3", m3);
-		if (!ryzen.isEmpty()) responseCpu.put("Ryzen", ryzen);
-		if (!etc.isEmpty()) responseCpu.put("ETC", etc);
+		if (!intelCore.isEmpty())
+			responseCpu.put("Intel Core", intelCore);
+		if (!intelUltraCore.isEmpty())
+			responseCpu.put("Intel Ultra Core", intelUltraCore);
+		if (!intelPentium.isEmpty())
+			responseCpu.put("Intel Pentium", intelPentium);
+		if (!intelCeleron.isEmpty())
+			responseCpu.put("Intel Celeron", intelCeleron);
+		if (!m1.isEmpty())
+			responseCpu.put("Apple M1", m1);
+		if (!m2.isEmpty())
+			responseCpu.put("Apple M2", m2);
+		if (!m3.isEmpty())
+			responseCpu.put("Apple M3", m3);
+		if (!ryzen.isEmpty())
+			responseCpu.put("Ryzen", ryzen);
+		if (!etc.isEmpty())
+			responseCpu.put("ETC", etc);
 
 		return SelectOptionResponse.builder()
 			.brand(brand)
@@ -83,4 +97,19 @@ public class LapTopService {
 			.inch(inch)
 			.build();
 	}
+
+	public void saveLapTopsFromJson(String filePath) throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		// JSON 파일 읽기
+		List<LapTop> laptops = objectMapper.readValue(
+			new File(filePath),
+			new TypeReference<List<LapTop>>() {
+			}
+		);
+
+		// DB에 저장
+		lapTopRepository.saveAll(laptops);
+	}
 }
+
