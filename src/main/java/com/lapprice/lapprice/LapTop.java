@@ -1,5 +1,7 @@
 package com.lapprice.lapprice;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,8 +24,12 @@ public class LapTop {
 
 	private String brand;
 	private String source;
+
+	@JsonProperty("name")
 	private String lapTopName;
 	private String cpu;
+
+	@JsonProperty("URL")
 	private String sourceURL;
 	private Integer ssd;
 	private Integer ram;

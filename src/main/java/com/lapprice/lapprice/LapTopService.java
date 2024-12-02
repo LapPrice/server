@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lapprice.lapprice.dto.SelectOptionResponse;
 
 import com.lapprice.lapprice.dto.GetLaptopListExceptLaptopNameResponse;
 import com.lapprice.lapprice.dto.GetSelectOptionResponse;
