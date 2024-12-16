@@ -1,4 +1,4 @@
-package com.lapprice.lapprice;
+package com.lapprice.lapprice.repository;
 
 import java.util.List;
 
@@ -6,8 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.lapprice.lapprice.CustomLapTopRepository;
+import com.lapprice.lapprice.LapTop;
+
 @Repository
-public interface LapTopRepository extends JpaRepository<LapTop, Long> {
+public interface LapTopRepository extends JpaRepository<LapTop, Long>, CustomLapTopRepository {
 	@Query("SELECT DISTINCT brand FROM LapTop")
 	List<String> findDistinctBrands();
 
@@ -24,4 +27,6 @@ public interface LapTopRepository extends JpaRepository<LapTop, Long> {
 	List<Integer> findDistinctInchesSorted();
 
 	List<LapTop> findAllByBrandAndCpuAndSsdAndRamAndInch(String brand,String cpu, Integer ssd, Integer ram, Integer inch);
+
+
 }

@@ -15,9 +15,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.lapprice.lapprice.dto.GetLaptopListExceptLaptopNameResponse;
+import com.lapprice.lapprice.dto.GetOptionBySelectRequest;
 import com.lapprice.lapprice.dto.GetSelectOptionResponse;
 import com.lapprice.lapprice.dto.GetlaptopListExceptLaptopNameRequest;
 import com.lapprice.lapprice.dto.GetLaptopExceptLaptopNameResponse;
+import com.lapprice.lapprice.repository.LapTopRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,18 @@ public class LapTopService {
 		List<Integer> ssd = lapTopRepository.findDistinctSSdsSorted();
 		List<String> brand = lapTopRepository.findDistinctBrands();
 		List<Integer> inch = lapTopRepository.findDistinctInchesSorted();
+		Map<String, List<String>> responseCpu = getCpuMap(cpu);
+
+		return GetSelectOptionResponse.builder()
+			.brand(brand)
+			.cpu(responseCpu)
+			.ram(ram)
+			.ssd(ssd)
+			.inch(inch)
+			.build();
+	}
+
+	public static Map<String, List<String>> getCpuMap(List<String> cpu) {
 		Map<String, List<String>> responseCpu = new HashMap<>();
 
 		List<String> intelCore = new ArrayList<>();
@@ -93,14 +107,7 @@ public class LapTopService {
 			responseCpu.put("Ryzen", ryzen);
 		if (!etc.isEmpty())
 			responseCpu.put("ETC", etc);
-
-		return GetSelectOptionResponse.builder()
-			.brand(brand)
-			.cpu(responseCpu)
-			.ram(ram)
-			.ssd(ssd)
-			.inch(inch)
-			.build();
+		return responseCpu;
 	}
 
 	public GetLaptopListExceptLaptopNameResponse getLaptopListExceptLaptopName(
@@ -146,8 +153,15 @@ public class LapTopService {
 			new TypeReference<List<LapTop>>() {
 			}
 		);
-
 		// DB에 저장
 		lapTopRepository.saveAll(laptops);
 	}
+
+	public GetSelectOptionResponse getOptionBySelect(GetOptionBySelectRequest request){
+
+		GetSelectOptionResponse response = lapTopRepository.getLapTopByCustom(request);
+		return response;
+
+	}
+
 }

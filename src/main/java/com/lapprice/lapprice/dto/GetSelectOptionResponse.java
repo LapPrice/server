@@ -1,6 +1,9 @@
 package com.lapprice.lapprice.dto;
 import java.util.List;
 import java.util.Map;
+
+import com.lapprice.lapprice.LapTop;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +20,5 @@ public class GetSelectOptionResponse {
 	private List<Integer> inch;
 
 	private Map<String, List<String>> cpu;
+
 }

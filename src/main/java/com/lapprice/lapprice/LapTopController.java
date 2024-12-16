@@ -3,7 +3,6 @@ package com.lapprice.lapprice;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lapprice.lapprice.dto.GetLaptopListExceptLaptopNameResponse;
+import com.lapprice.lapprice.dto.GetOptionBySelectRequest;
 import com.lapprice.lapprice.dto.GetSelectOptionResponse;
 import com.lapprice.lapprice.dto.GetlaptopListExceptLaptopNameRequest;
+import com.lapprice.lapprice.repository.LapTopRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +28,9 @@ public class LapTopController {
 	private final LapTopService lapTopService;
 	private final LapTopRepository lapTopRepository;
 
-	@GetMapping(value = "/option")
-	public ResponseEntity<GetSelectOptionResponse> getSelectOption() {
-		GetSelectOptionResponse response = lapTopService.getSelectOptionResponse();
+	@PostMapping(value = "/option")
+	public ResponseEntity<GetSelectOptionResponse> getSelectOption(@RequestBody GetOptionBySelectRequest request) {
+		GetSelectOptionResponse response = lapTopService.getOptionBySelect(request);
 
 		return ResponseEntity.ok().body(response);
 	}
