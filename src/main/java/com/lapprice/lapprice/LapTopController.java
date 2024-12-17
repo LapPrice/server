@@ -51,7 +51,7 @@ public class LapTopController {
 		return ResponseEntity.ok("Laptops data saved successfully!");
 	}
 
-	@PostMapping(value = "/market-price")
+	@PostMapping(value = "/marketPrice")
 	public ResponseEntity<GetLaptopListBySourceResponse> getLaptopListBySourceResponseResponseEntity(
 		@RequestBody GetLaptopBySourceRequest request) {
 

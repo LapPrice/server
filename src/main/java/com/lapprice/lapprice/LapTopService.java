@@ -197,6 +197,7 @@ public class LapTopService {
 	}
 
 	private int calculateMedian(List<Integer> prices) {
+		if (prices.isEmpty()) return 0;
 		int size = prices.size();
 		return prices.get(size / 2);
 	}
