@@ -44,7 +44,7 @@ public class LapTopController {
 			.ram(ram)
 			.inch(inch)
 			.build();
-		System.out.println(brand + cpu + ssd + ram + inch);
+
 		GetLaptopListExceptLaptopNameResponse response = lapTopService.getLaptopListExceptLaptopName(request);
 
 		return ResponseEntity.ok().body(response);
