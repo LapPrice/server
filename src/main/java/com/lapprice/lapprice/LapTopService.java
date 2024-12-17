@@ -1,5 +1,6 @@
 package com.lapprice.lapprice;
-
+import java.util.*;
+import java.util.stream.Collectors;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class LapTopService {
 		List<String> m1 = new ArrayList<>();
 		List<String> m2 = new ArrayList<>();
 		List<String> m3 = new ArrayList<>();
+		List<String> m4 = new ArrayList<>();
 		List<String> ryzen = new ArrayList<>();
 		List<String> etc = new ArrayList<>();
 
@@ -82,6 +84,9 @@ public class LapTopService {
 				m2.add(cpuName);
 			} else if (cpuName.startsWith("M3")) {
 				m3.add(cpuName);
+			}
+			else if (cpuName.startsWith("M4")) {
+				m4.add(cpuName);
 			} else if (cpuName.startsWith("Ryzen")) {
 				ryzen.add(cpuName);
 			} else {
@@ -93,6 +98,7 @@ public class LapTopService {
 		Collections.sort(m1);
 		Collections.sort(m2);
 		Collections.sort(m3);
+		Collections.sort(m4);
 
 		if (!intelCore.isEmpty())
 			responseCpu.put("Intel Core", intelCore);
@@ -108,11 +114,26 @@ public class LapTopService {
 			responseCpu.put("Apple M2", m2);
 		if (!m3.isEmpty())
 			responseCpu.put("Apple M3", m3);
+		if (!m4.isEmpty())
+			responseCpu.put("Apple M4", m4);
 		if (!ryzen.isEmpty())
 			responseCpu.put("Ryzen", ryzen);
 		if (!etc.isEmpty())
 			responseCpu.put("ETC", etc);
-		return responseCpu;
+
+		return responseCpu.entrySet()
+			.stream()
+			.sorted((e1, e2) -> {
+				if (e1.getKey().equals("ETC")) return 1;
+				if (e2.getKey().equals("ETC")) return -1;
+				return e1.getKey().compareTo(e2.getKey());
+			})
+			.collect(Collectors.toMap(
+				Map.Entry::getKey,
+				Map.Entry::getValue,
+				(oldValue, newValue) -> oldValue,
+				LinkedHashMap::new
+			));
 	}
 
 	public GetLaptopListExceptLaptopNameResponse getLaptopListExceptLaptopName(GetlaptopListExceptLaptopNameRequest request) {
@@ -142,7 +163,7 @@ public class LapTopService {
 		for (Map.Entry<String, List<LapTop>> entry : groupedLaptops.entrySet()) {
 			String laptopName = entry.getKey();
 			List<LapTop> groupedLapTops = entry.getValue();
-
+			System.out.println(laptopName + " : " + groupedLapTops.size() + "\n");
 			// 가격 리스트 추출 및 정렬
 			List<Integer> prices = groupedLapTops.stream()
 				.map(LapTop::getPrice)
@@ -218,6 +239,7 @@ public class LapTopService {
 	public GetSelectOptionResponse getOptionBySelect(GetOptionBySelectRequest request){
 
 		GetSelectOptionResponse response = lapTopRepository.getLapTopByCustom(request);
+
 		return response;
 
 	}
