@@ -47,7 +47,9 @@ public class LapTopController {
 
 	@PostMapping(value = "/laptops")
 	public ResponseEntity<String> uploadLaptops(@RequestBody List<LapTop> laptops) {
-		lapTopRepository.saveAll(laptops);
+		List<String> distinctUrls = lapTopRepository.findDistinctUrls();
+		List<LapTop> filtered = laptops.stream().filter(e -> !distinctUrls.contains(e.getSourceURL())).toList();
+		lapTopRepository.saveAll(filtered);
 		return ResponseEntity.ok("Laptops data saved successfully!");
 	}
 

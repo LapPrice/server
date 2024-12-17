@@ -193,7 +193,7 @@ public class LapTopService {
 		GetLaptopPriceAndListBySourceResponse danawaResponse = new GetLaptopPriceAndListBySourceResponse(calculateMedian(danawaPriceList),danawaLaptopList);
 		GetLaptopPriceAndListBySourceResponse bungaejangtoResponse = new GetLaptopPriceAndListBySourceResponse(calculateMedian(bungaejangtoPriceList),bungaejangtoLaptopList);
 
-		return new GetLaptopListBySourceResponse(joonggonaraResponse,danawaResponse,bungaejangtoResponse);
+		return new GetLaptopListBySourceResponse(danawaResponse,joonggonaraResponse,bungaejangtoResponse);
 	}
 
 	private int calculateMedian(List<Integer> prices) {

@@ -26,6 +26,9 @@ public interface LapTopRepository extends JpaRepository<LapTop, Long>, CustomLap
 	@Query("SELECT DISTINCT inch FROM LapTop ORDER BY inch ASC")
 	List<Integer> findDistinctInchesSorted();
 
+	@Query("SELECT DISTINCT sourceURL FROM LapTop")
+	List<String> findDistinctUrls();
+
 	List<LapTop> findAllByBrandAndCpuAndSsdAndRamAndInch(String brand,String cpu, Integer ssd, Integer ram, Integer inch);
 
 
