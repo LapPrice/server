@@ -29,4 +29,7 @@ public interface LapTopRepository extends JpaRepository<LapTop, Long>, CustomLap
 	List<LapTop> findAllByBrandAndCpuAndSsdAndRamAndInch(String brand,String cpu, Integer ssd, Integer ram, Integer inch);
 
 
+
+	List<LapTop> findAllByBrandAndCpuAndSsdAndRamAndInchAndLapTopNameAndSourceOrderByPrice(String brand,String cpu, Integer ssd, Integer ram, Integer inch, String laptopName, String source);
+
 }

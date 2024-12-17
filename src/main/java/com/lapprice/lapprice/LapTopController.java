@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lapprice.lapprice.dto.GetLaptopBySourceRequest;
+import com.lapprice.lapprice.dto.GetLaptopListBySourceResponse;
 import com.lapprice.lapprice.dto.GetLaptopListExceptLaptopNameResponse;
 import com.lapprice.lapprice.dto.GetOptionBySelectRequest;
 import com.lapprice.lapprice.dto.GetSelectOptionResponse;
@@ -49,7 +51,7 @@ public class LapTopController {
 			.ram(ram)
 			.inch(inch)
 			.build();
-		System.out.println(brand + cpu + ssd + ram + inch);
+
 		GetLaptopListExceptLaptopNameResponse response = lapTopService.getLaptopListExceptLaptopName(request);
 
 		return ResponseEntity.ok().body(response);
@@ -59,5 +61,12 @@ public class LapTopController {
 	public ResponseEntity<String> uploadLaptops(@RequestBody List<LapTop> laptops) {
 		lapTopRepository.saveAll(laptops);
 		return ResponseEntity.ok("Laptops data saved successfully!");
+	}
+
+	@PostMapping(value = "/market-price")
+	public ResponseEntity<GetLaptopListBySourceResponse> getLaptopListBySourceResponseResponseEntity(
+		@RequestBody GetLaptopBySourceRequest request) {
+
+		return ResponseEntity.ok().body(lapTopService.getLaptopListBySource(request));
 	}
 }
