@@ -3,11 +3,14 @@ package com.lapprice.lapprice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lapprice.lapprice.dto.GetLaptopBySourceRequest;
+import com.lapprice.lapprice.dto.GetLaptopListBySourceResponse;
 import com.lapprice.lapprice.dto.GetLaptopListExceptLaptopNameResponse;
 import com.lapprice.lapprice.dto.GetSelectOptionResponse;
 import com.lapprice.lapprice.dto.GetlaptopListExceptLaptopNameRequest;
@@ -48,5 +51,12 @@ public class LapTopController {
 		GetLaptopListExceptLaptopNameResponse response = lapTopService.getLaptopListExceptLaptopName(request);
 
 		return ResponseEntity.ok().body(response);
+	}
+
+	@PostMapping(value = "/market-price")
+	public ResponseEntity<GetLaptopListBySourceResponse> getLaptopListBySourceResponseResponseEntity(
+		@RequestBody GetLaptopBySourceRequest request) {
+
+		return ResponseEntity.ok().body(lapTopService.getLaptopListBySource(request));
 	}
 }
