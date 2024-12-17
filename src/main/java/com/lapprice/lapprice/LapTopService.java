@@ -115,33 +115,44 @@ public class LapTopService {
 		return responseCpu;
 	}
 
-	public GetLaptopListExceptLaptopNameResponse getLaptopListExceptLaptopName(
-		GetlaptopListExceptLaptopNameRequest request) {
-		List<LapTop> allLaptopList = lapTopRepository.findAllByBrandAndCpuAndSsdAndRamAndInch(request.brand(),
-			request.cpu(), request.ssd(), request.ram(), request.inch());
+	public GetLaptopListExceptLaptopNameResponse getLaptopListExceptLaptopName(GetlaptopListExceptLaptopNameRequest request) {
+		// CustomLapTopRepository의 동적 쿼리 메서드 호출
+		List<LapTop> laptops = lapTopRepository.findLaptopsByDynamicSpecs(
+			request.brand(),
+			request.cpu(),
+			request.ssd(),
+			request.ram(),
+			request.inch()
+		);
 
-		Map<String, List<LapTop>> groupedLaptops = allLaptopList.stream()
+
+		// LapTop 리스트를 그룹화 (노트북 이름 기준)
+		Map<String, List<LapTop>> groupedLaptops = laptops.stream()
 			.collect(Collectors.groupingBy(LapTop::getLapTopName));
 
-		List<GetLaptopExceptLaptopNameResponse> lapTopList = new ArrayList<>();
+		// 결과 리스트 생성
+		List<GetLaptopExceptLaptopNameResponse> laptopResponseList = new ArrayList<>();
 
-		for (Map.Entry<String, List<LapTop>> laptopList : groupedLaptops.entrySet()) {
-			String laptopName = laptopList.getKey();
-			List<LapTop> lapTops = laptopList.getValue();
+		for (Map.Entry<String, List<LapTop>> entry : groupedLaptops.entrySet()) {
+			String laptopName = entry.getKey();
+			List<LapTop> groupedLapTops = entry.getValue();
 
-			List<Integer> prices = lapTops.stream()
+			// 가격 리스트 추출 및 정렬
+			List<Integer> prices = groupedLapTops.stream()
 				.map(LapTop::getPrice)
 				.sorted()
 				.collect(Collectors.toList());
 
+			// 중간값(대표가격) 계산
 			int representativePrice = calculateMedian(prices);
 
-			GetLaptopExceptLaptopNameResponse response = GetLaptopExceptLaptopNameResponse.toDTO(lapTops.get(0),
-				representativePrice);
-			lapTopList.add(response);
+			// 첫 번째 LapTop과 대표가격을 기반으로 DTO 생성
+			GetLaptopExceptLaptopNameResponse response = GetLaptopExceptLaptopNameResponse.toDTO(
+				groupedLapTops.get(0), representativePrice);
+			laptopResponseList.add(response);
 		}
 
-		return new GetLaptopListExceptLaptopNameResponse(lapTopList);
+		return new GetLaptopListExceptLaptopNameResponse(laptopResponseList);
 	}
 
 	public GetLaptopListBySourceResponse getLaptopListBySource(GetLaptopBySourceRequest request) {

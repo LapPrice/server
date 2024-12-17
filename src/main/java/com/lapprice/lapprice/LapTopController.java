@@ -37,21 +37,9 @@ public class LapTopController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@GetMapping(value = "/laptop-name-list", produces = "application/json")
+	@PostMapping(value = "/laptop-name-list")
 	public ResponseEntity<GetLaptopListExceptLaptopNameResponse> getLaptopListExceptLaptopNameResponseResponseEntity(
-		@RequestParam String brand,
-		@RequestParam String cpu,
-		@RequestParam Integer ssd,
-		@RequestParam Integer ram,
-		@RequestParam Integer inch) {
-		GetlaptopListExceptLaptopNameRequest request = GetlaptopListExceptLaptopNameRequest.builder()
-			.brand(brand)
-			.cpu(cpu)
-			.ssd(ssd)
-			.ram(ram)
-			.inch(inch)
-			.build();
-
+		@RequestBody GetlaptopListExceptLaptopNameRequest request) {
 		GetLaptopListExceptLaptopNameResponse response = lapTopService.getLaptopListExceptLaptopName(request);
 
 		return ResponseEntity.ok().body(response);
