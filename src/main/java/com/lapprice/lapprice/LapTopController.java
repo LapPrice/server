@@ -1,6 +1,9 @@
 package com.lapprice.lapprice;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,9 +50,21 @@ public class LapTopController {
 
 	@PostMapping(value = "/laptops")
 	public ResponseEntity<String> uploadLaptops(@RequestBody List<LapTop> laptops) {
+		// 데이터베이스에서 이미 존재하는 URL 목록 가져오기
 		List<String> distinctUrls = lapTopRepository.findDistinctUrls();
-		List<LapTop> filtered = laptops.stream().filter(e -> !distinctUrls.contains(e.getSourceURL())).toList();
+
+		// 중복되지 않은 JSON 데이터를 필터링
+		Set<String> seenUrls = new HashSet<>();
+		List<LapTop> filtered = laptops.stream()
+			// DB에 없는 값만 필터링
+			.filter(e -> !distinctUrls.contains(e.getSourceURL()))
+			// 리스트 내 중복 제거 (sourceURL 기준)
+			.filter(e -> seenUrls.add(e.getSourceURL()))
+			.toList();
+
+		// 필터링된 데이터 저장
 		lapTopRepository.saveAll(filtered);
+
 		return ResponseEntity.ok("Laptops data saved successfully!");
 	}
 
