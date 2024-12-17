@@ -126,9 +126,15 @@ public class LapTopService {
 		);
 
 
-		// LapTop 리스트를 그룹화 (노트북 이름 기준)
 		Map<String, List<LapTop>> groupedLaptops = laptops.stream()
-			.collect(Collectors.groupingBy(LapTop::getLapTopName));
+			.collect(Collectors.groupingBy(laptop -> String.join("_",
+				laptop.getLapTopName() != null ? laptop.getLapTopName().toLowerCase().replaceAll("\\s+", "") : "",
+				laptop.getBrand() != null ? laptop.getBrand().toLowerCase().replaceAll("\\s+", "") : "",
+				laptop.getCpu() != null ? laptop.getCpu().toLowerCase().replaceAll("\\s+", "") : "",
+				laptop.getRam() != null ? String.valueOf(laptop.getRam()) : "",
+				laptop.getSsd() != null ? String.valueOf(laptop.getSsd()) : "",
+				laptop.getInch() != null ? String.valueOf(laptop.getInch()) : ""
+			)));
 
 		// 결과 리스트 생성
 		List<GetLaptopExceptLaptopNameResponse> laptopResponseList = new ArrayList<>();
